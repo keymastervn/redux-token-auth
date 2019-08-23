@@ -15,6 +15,7 @@ Given a Rails backend using Devise Token Auth, this module provides several asyn
 - Register a user (`registerUser`).
 - Sign in a user (`signInUser`).
 - Sign out a user (`signOutUser`).
+- Update user information (`updateUser`).
 - Verify the current user’s auth token (`verifyToken`).
 
 It also provides the corresponding Redux reducer to handle these actions.
@@ -130,6 +131,7 @@ import { authUrl } from './constants'
 
 const config = {
   authUrl,
+  storage: localStorage, // AsyncStorage if react-native
   userAttributes: {
     firstName: 'first_name',
     imageUrl: 'image'
@@ -260,6 +262,8 @@ export default connect(
   { registerUser },
 )(RegisterScreen)
 ```
+
+same for `updateUser`!
 
 ### `signInUser`
 
