@@ -142,7 +142,7 @@ var generateAuthActions = function (config) {
                                 })];
                         case 2:
                             response = _a.sent();
-                            auth_1.setAuthHeaders(response.headers);
+                            auth_1.setAuthHeaders(Storage, response.headers);
                             auth_1.persistAuthHeadersInDeviceStorage(Storage, response.headers);
                             userAttributesToSave = auth_1.getUserAttributesFromResponse(userAttributes, response);
                             dispatch(exports.registrationRequestSucceeded(userAttributesToSave));
@@ -185,7 +185,7 @@ var generateAuthActions = function (config) {
                                 })];
                         case 2:
                             response = _a.sent();
-                            auth_1.setAuthHeaders(response.headers);
+                            auth_1.setAuthHeaders(Storage, response.headers);
                             auth_1.persistAuthHeadersInDeviceStorage(Storage, response.headers);
                             userAttributesToSave = auth_1.getUserAttributesFromResponse(userAttributes, response);
                             dispatch(exports.registrationUpdateRequestSucceeded(userAttributesToSave));
@@ -218,7 +218,7 @@ var generateAuthActions = function (config) {
                                 })];
                         case 2:
                             response = _a.sent();
-                            auth_1.setAuthHeaders(response.headers);
+                            auth_1.setAuthHeaders(Storage, response.headers);
                             auth_1.persistAuthHeadersInDeviceStorage(Storage, response.headers);
                             userAttributesToSave = auth_1.getUserAttributesFromResponse(userAttributes, response);
                             dispatch(exports.verifyTokenRequestSucceeded(userAttributesToSave));
@@ -255,7 +255,7 @@ var generateAuthActions = function (config) {
                                 })];
                         case 2:
                             response = _a.sent();
-                            auth_1.setAuthHeaders(response.headers);
+                            auth_1.setAuthHeaders(Storage, response.headers);
                             auth_1.persistAuthHeadersInDeviceStorage(Storage, response.headers);
                             userAttributesToSave = auth_1.getUserAttributesFromResponse(userAttributes, response);
                             dispatch(exports.signInRequestSucceeded(userAttributesToSave));

@@ -4,7 +4,7 @@ import {
   AuthHeaders,
   AuthResponse,
   DeviceStorage,
-  SingleLayerStringMap,
+  SingleLayerStringMap
 } from '../types'
 
 const authHeaderKeys: Array<string> = [
@@ -12,18 +12,30 @@ const authHeaderKeys: Array<string> = [
   'token-type',
   'client',
   'expiry',
-  'uid',
+  'uid'
 ]
 
-export const setAuthHeaders = (headers: AuthHeaders): void => {
+export const setAuthHeaders = (
+  Storage: DeviceStorage,
+  headers: AuthHeaders
+): void => {
   authHeaderKeys.forEach((key: string) => {
-    axios.defaults.headers.common[key] = headers[key]
+    Storage.getItem(key).then((fromStorage: string) => {
+      const value = headers[key] || fromStorage
+      axios.defaults.headers.common[key] = value
+    })
   })
 }
 
-export const persistAuthHeadersInDeviceStorage = (Storage: DeviceStorage, headers: AuthHeaders): void => {
+export const persistAuthHeadersInDeviceStorage = (
+  Storage: DeviceStorage,
+  headers: AuthHeaders
+): void => {
   authHeaderKeys.forEach((key: string) => {
-    Storage.setItem(key, headers[key])
+    Storage.getItem(key).then((fromStorage: string) => {
+      const value = headers[key] || fromStorage
+      Storage.setItem(key, value) // <--- Not really needed
+    })
   })
 }
 
@@ -33,7 +45,9 @@ export const deleteAuthHeaders = (): void => {
   })
 }
 
-export const deleteAuthHeadersFromDeviceStorage = async (Storage: DeviceStorage): Promise<void> => {
+export const deleteAuthHeadersFromDeviceStorage = async (
+  Storage: DeviceStorage
+): Promise<void> => {
   authHeaderKeys.forEach((key: string) => {
     Storage.removeItem(key)
   })
@@ -43,12 +57,17 @@ export const getUserAttributesFromResponse = (
   userAttributes: SingleLayerStringMap,
   response: AuthResponse
 ): SingleLayerStringMap => {
-  const invertedUserAttributes: SingleLayerStringMap = invertMapKeysAndValues(userAttributes)
-  const userAttributesBackendKeys: string[] = Object.keys(invertedUserAttributes)
+  const invertedUserAttributes: SingleLayerStringMap = invertMapKeysAndValues(
+    userAttributes
+  )
+  const userAttributesBackendKeys: string[] = Object.keys(
+    invertedUserAttributes
+  )
   const userAttributesToReturn: SingleLayerStringMap = {}
   Object.keys(response.data.data).forEach((key: string) => {
     if (userAttributesBackendKeys.indexOf(key) !== -1) {
-      userAttributesToReturn[invertedUserAttributes[key]] = response.data.data[key]
+      userAttributesToReturn[invertedUserAttributes[key]] =
+        response.data.data[key]
     }
   })
   return userAttributesToReturn

@@ -43,16 +43,22 @@ var authHeaderKeys = [
     'token-type',
     'client',
     'expiry',
-    'uid',
+    'uid'
 ];
-exports.setAuthHeaders = function (headers) {
+exports.setAuthHeaders = function (Storage, headers) {
     authHeaderKeys.forEach(function (key) {
-        axios_1.default.defaults.headers.common[key] = headers[key];
+        Storage.getItem(key).then(function (fromStorage) {
+            var value = headers[key] || fromStorage;
+            axios_1.default.defaults.headers.common[key] = value;
+        });
     });
 };
 exports.persistAuthHeadersInDeviceStorage = function (Storage, headers) {
     authHeaderKeys.forEach(function (key) {
-        Storage.setItem(key, headers[key]);
+        Storage.getItem(key).then(function (fromStorage) {
+            var value = headers[key] || fromStorage;
+            Storage.setItem(key, value); // <--- Not really needed
+        });
     });
 };
 exports.deleteAuthHeaders = function () {
@@ -74,7 +80,8 @@ exports.getUserAttributesFromResponse = function (userAttributes, response) {
     var userAttributesToReturn = {};
     Object.keys(response.data.data).forEach(function (key) {
         if (userAttributesBackendKeys.indexOf(key) !== -1) {
-            userAttributesToReturn[invertedUserAttributes[key]] = response.data.data[key];
+            userAttributesToReturn[invertedUserAttributes[key]] =
+                response.data.data[key];
         }
     });
     return userAttributesToReturn;
